@@ -29,6 +29,7 @@ def start_bot():
     @bot.message_handler(commands=['/schedule'])
     def get_data(message):
         options = Options()
+        options.add_argument('--no-sandbox')
         options.headless = True
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())
                                   , options=options)
