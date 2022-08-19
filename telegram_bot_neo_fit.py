@@ -60,4 +60,4 @@ def start_bot():
         get_data(message)
 
 
-    bot.polling()
+    bot.infinity_polling(timeout=10, long_polling_timeout = 5)
