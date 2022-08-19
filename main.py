@@ -1,4 +1,4 @@
-from bot.telegram_bot_neo_fit import start_bot
+from telegram_bot_neo_fit import start_bot
 
 
 
