@@ -35,19 +35,34 @@ def start_bot():
                                   , options=options)
 
         bot.send_message(message.chat.id, 'Звоню в неофит')
-
+        
+        ## Открываем страницу NEO-FIT
         driver.get('https://s.n-fit.ru/?link=')
-
         sleep(3)
+        
+        ### Выбираем только групповые занятия
+        button_group = driver.find_element(By.XPATH, '/html/body/div[8]/div/section[1]/a[2]')
+        button_group.click()
+        
+        ### Выбираем только занятия для взрослых
+        button_adult_timetable = driver.find_element(By.XPATH, '//*[@id="timetable"]/div/header/div[1]/a[1]')
+        button_adult_timetable.click()
+        
+        ### Раскрываем всё расписание для парсинга
         button_more_timetable = driver.find_element(By.ID, 'show-more-lessons')
         button_more_timetable.click()
-
+        
+        ### Запаковывакм расписание в переменную в переменную
         schedule = driver.find_elements(By.CLASS_NAME, 'timetableEntries')
 
+        ### Проходимся по ней итератором
         for i in schedule:
             data = i.text
-
-        bot.send_message(message.chat.id, data)
+            ### Удаляем не нужные слова
+            result = re.sub('Групповой зал,  ', '', data)
+        
+        ### Отправляем сообщение с расписанием
+        bot.send_message(message.chat.id, result)
 
         driver.close()
         driver.quit()
