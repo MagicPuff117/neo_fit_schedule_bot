@@ -30,24 +30,29 @@ def start_bot():
     @bot.message_handler(commands=['/schedule'])
     def get_data(message):
         options = Options()
-
+        options.add_argument('--no-sandbox')
         options.headless = True
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())
                                   , options=options)
 
         bot.send_message(message.chat.id, 'Звоню в неофит')
-        ## Открываем страницу NEO-FIT
+
+        ### Открываем страницу NEO-FIT
         driver.get('https://s.n-fit.ru/?link=')
-        sleep(3)
+        sleep(2)
+
         ### Выбираем только групповые занятия
-        button_group = driver.find_element(By.XPATH, '/html/body/div[8]/div/section[1]/a[2]')
+        button_group = driver.find_element(By.CLASS_NAME, 'groupClass')
         button_group.click()
+
         ### Выбираем только занятия для взрослых
         button_adult_timetable = driver.find_element(By.XPATH, '//*[@id="timetable"]/div/header/div[1]/a[1]')
         button_adult_timetable.click()
+
         ### Раскрываем всё расписание для парсинга
         button_more_timetable = driver.find_element(By.ID, 'show-more-lessons')
         button_more_timetable.click()
+
         ### Запаковывакм расписание в переменную в переменную
         schedule = driver.find_elements(By.CLASS_NAME, 'timetableEntries')
 
@@ -56,6 +61,7 @@ def start_bot():
             data = i.text
             ### Удаляем не нужные слова
             result = re.sub('Групповой зал,  ', '', data)
+
         ### Отправляем сообщение с расписанием
         bot.send_message(message.chat.id, result)
 
@@ -70,4 +76,6 @@ def start_bot():
         get_data(message)
 
 
-    bot.infinity_polling(timeout=5, skip_pending=True)
+    bot.infinity_polling(timeout=10, long_polling_timeout = 5)
+
+
