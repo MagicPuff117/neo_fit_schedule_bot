@@ -59,11 +59,11 @@ def start_bot():
         ### Проходимся по ней итератором
         for i in schedule:
             data = i.text
-            ### Удаляем не нужные слова
-            result = re.sub('Групповой зал,  ', '', data)
-
+            ### Удаляем ненужные слова
+            first_result = re.sub('Групповой зал,  ', '', data)
+            second_result = re.search('Бойцовский зал,  ','',first_result)
         ### Отправляем сообщение с расписанием
-        bot.send_message(message.chat.id, result)
+        bot.send_message(message.chat.id, second_result)
 
         driver.close()
         driver.quit()
