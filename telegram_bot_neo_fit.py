@@ -61,7 +61,7 @@ def start_bot():
             data = i.text
             ### Удаляем ненужные слова
             first_result = re.sub('Групповой зал,  ', '', data)
-            second_result = re.search('Бойцовский зал,  ','',first_result)
+            second_result = re.sub('Бойцовский зал,  ','',first_result)
         ### Отправляем сообщение с расписанием
         bot.send_message(message.chat.id, second_result)
 
