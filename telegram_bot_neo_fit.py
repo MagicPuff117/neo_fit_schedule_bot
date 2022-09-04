@@ -31,6 +31,7 @@ def start_bot():
     def get_data(message):
         options = Options()
         options.add_argument('--no-sandbox')
+        options.add_argument('--window-size=1920,1080')
         options.headless = True
         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install())
                                   , options=options)
@@ -41,13 +42,14 @@ def start_bot():
         driver.get('https://s.n-fit.ru/?link=')
         sleep(2)
 
+        ### Выбираем только занятия для взрослых
+        button_adult_timetable = driver.find_element(By.CSS_SELECTOR, '#timetable > div > header > div.tabs.age > a:nth-child(1)')
+        button_adult_timetable.click()
+
         ### Выбираем только групповые занятия
-        button_group = driver.find_element(By.CLASS_NAME, 'groupClass')
+        button_group = driver.find_element(By.XPATH,'//*[@id="group-classes2"]/a[2]')
         button_group.click()
 
-        ### Выбираем только занятия для взрослых
-        button_adult_timetable = driver.find_element(By.XPATH, '//*[@id="timetable"]/div/header/div[1]/a[1]')
-        button_adult_timetable.click()
 
         ### Раскрываем всё расписание для парсинга
         button_more_timetable = driver.find_element(By.ID, 'show-more-lessons')
